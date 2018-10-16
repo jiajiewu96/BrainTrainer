@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+    android:id="@+id/buttonLayout"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_centerHorizontal="true">
+
+    <Button
+        android:id="@+id/answerButton1"
+        android:layout_width="wrap_content"
+        android:layout_column="0"
+        android:layout_gravity="fill"
+        android:layout_row="0"
+
+        android:tag="0"
+        android:text="@string/default_answer"
+        android:textSize="72sp" />
+
+    <Button
+        android:id="@+id/answerButton2"
+        android:layout_width="wrap_content"
+        android:layout_column="0"
+        android:layout_gravity="fill"
+        android:layout_row="1"
+
+        android:tag="1"
+        android:text="@string/default_answer"
+        android:textSize="72sp" />
+
+    <Button
+        android:id="@+id/answerButton3"
+        android:layout_width="wrap_content"
+        android:layout_column="1"
+        android:layout_gravity="fill"
+        android:layout_row="0"
+
+        android:tag="2"
+        android:text="@string/default_answer"
+        android:textSize="72sp" />
+
+    <Button
+        android:id="@+id/answerButton4"
+        android:layout_width="wrap_content"
+        android:layout_column="1"
+        android:layout_gravity="fill"
+        android:layout_row="1"
+
+        android:tag="3"
+        android:text="@string/default_answer"
+        android:textSize="72sp" />
+
+</GridLayout>
