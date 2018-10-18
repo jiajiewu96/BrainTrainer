@@ -10,7 +10,7 @@ public class QuestionGenerator {
 
     private static QuestionGenerator instance;
 
-    private int num;
+    private int num, randBound;
     private ArrayList<Integer> answerArrayList = new ArrayList<>();
     private int locationOfCorrectAnswer;
 
@@ -27,11 +27,13 @@ public class QuestionGenerator {
     }
 
     public int generateNumber(){
+        randBound = 40;
         mRandom = new Random();
-        num = mRandom.nextInt(40);
+        num = mRandom.nextInt(randBound);
         return num;
     }
 
+    //Generates correct answer along side incorrect answers
     public ArrayList<Integer> generateAnswers(int answer){
         answerArrayList.clear();
         mRandom = new Random();
@@ -44,10 +46,10 @@ public class QuestionGenerator {
 
                 answerArrayList.add(answer);
             }else {
-                incorrectAnswer = mRandom.nextInt(40);
+                incorrectAnswer = mRandom.nextInt(randBound * 2);
 
                 while (incorrectAnswer == answer){
-                    incorrectAnswer = mRandom.nextInt(40);
+                    incorrectAnswer = mRandom.nextInt(randBound * 2);
                 }
 
                 answerArrayList.add(incorrectAnswer);

@@ -6,6 +6,15 @@
     <string name="default_answer">3</string>
     <string name="correct_text_view_text">That is correct</string>
     <string name="incorrect_text_view_text">That is incorrect</string>
-    <string name="play_again_button_text">Play Again</string>
+    <string name="play_again_button_text">Play Again?</string>
     <string name="game_over_text">Game Over!</string>
+    <string name="score_text">Score</string>
+    <string name="time_text">TextView</string>
+    <string name="finished_time_text">0s</string>
+    <string name="player_name_text_view_default">Player Name</string>
+    <string name="score_text_view_default">Score</string>
+    <string name="percent_text_view_default">Percent</string>
+    <string name="high_score_button_text">High Score</string>
+    <string name="player_name_edit_text_hint">Please enter your name!</string>
+    <string name="starts_game_content_description">starts_game</string>
 </resources>

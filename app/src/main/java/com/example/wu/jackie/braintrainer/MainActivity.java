@@ -1,10 +1,11 @@
 package com.example.wu.jackie.braintrainer;
 
-import android.app.Fragment;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
+
+import android.support.v4.app.FragmentTransaction;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -12,8 +13,14 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
+
+import com.example.wu.jackie.braintrainer.Fragments.AnswersFragment;
+import com.example.wu.jackie.braintrainer.Fragments.HighScoreFragment;
+import com.example.wu.jackie.braintrainer.Fragments.NumbersFragment;
+import com.example.wu.jackie.braintrainer.Fragments.PlayAgainFragment;
+import com.example.wu.jackie.braintrainer.Fragments.ResultFragment;
 
 import java.util.ArrayList;
 
@@ -22,17 +29,23 @@ public class MainActivity extends AppCompatActivity implements MyListener {
     public int score = 0;
     public int numberOfQuestions = 0;
 
-    Button startGameButton;
     private NumbersFragment mNumbersFragment;
     private AnswersFragment mAnswersFragment;
     private PlayAgainFragment mPlayAgainFragment;
+    private HighScoreFragment mHighScoreFragment;
 
     private int num1, num2;
+    private String playerName;
 
     private ArrayList<Integer> answersArrayList;
 
+    Button highScoreButton;
+    Button startGameButton;
     TextView timerTextView;
     TextView scoreTextView;
+    EditText playerNameEditText;
+
+    FragmentManager mFragmentManager;
 
     boolean gameActive;
 
@@ -61,6 +74,9 @@ public class MainActivity extends AppCompatActivity implements MyListener {
         timerTextView.setVisibility(View.INVISIBLE);
         scoreTextView = (TextView) findViewById(R.id.scoreTextView);
         scoreTextView.setText("0/0");
+        playerNameEditText = (EditText) findViewById(R.id.playerNameEditText);
+
+        highScoreButton = (Button) findViewById(R.id.highScoreButton);
 
         startGameButton = (Button) findViewById(R.id.start_game_button);
     }
@@ -91,6 +107,10 @@ public class MainActivity extends AppCompatActivity implements MyListener {
     public void generateInitialQuestion(View view) {
         gameActive = true;
 
+        playerName = playerNameEditText.getText().toString();
+
+        playerNameEditText.setVisibility(View.INVISIBLE);
+        highScoreButton.setVisibility(View.INVISIBLE);
         generateQuestionVariables();
 
         addNumberFragment();
@@ -105,7 +125,6 @@ public class MainActivity extends AppCompatActivity implements MyListener {
     }
 
 
-
     private void resetScore() {
         scoreTextView.setVisibility(View.VISIBLE);
         scoreTextView.setText("0/0");
@@ -115,17 +134,23 @@ public class MainActivity extends AppCompatActivity implements MyListener {
 
     private void startTimer() {
         timerTextView.setVisibility(View.VISIBLE);
-        countDownTimeInMillis = 10100;
+        timerTextView.setBackgroundResource(android.R.color.transparent);
+        countDownTimeInMillis = 30100;
         countDownIntervalInMillis = 1000;
-        timerTextView.setText("10s");
+        timerTextView.setText(String.valueOf((countDownTimeInMillis - 100) / 1000));
         new CountDownTimer(countDownTimeInMillis, countDownIntervalInMillis) {
             @Override
             public void onTick(long l) {
-                timerTextView.setText(String.valueOf( l/ countDownIntervalInMillis) + "s");
+                timerTextView.setText(String.format("%ss", String.valueOf(l / countDownIntervalInMillis)));
+                if (l <= 3100) {
+                    timerTextView.setBackgroundColor(Color.RED);
+                }
+
             }
 
             @Override
             public void onFinish() {
+                timerTextView.setText(R.string.finished_time_text);
                 gameActive = false;
                 setGameOverScreen();
             }
@@ -134,6 +159,7 @@ public class MainActivity extends AppCompatActivity implements MyListener {
     }
 
     private void setGameOverScreen() {
+        highScoreButton.setVisibility(View.VISIBLE);
         replaceAnswerFragWithPlayAgainFrag();
         removeNumberFragment();
         removeResultFragment();
@@ -142,15 +168,21 @@ public class MainActivity extends AppCompatActivity implements MyListener {
     }
 
     private void removeResultFragment() {
-        mResultFragment = (ResultFragment) getFragmentManager().findFragmentByTag("fragResult");
-        FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-        fragmentTransaction.remove(mResultFragment).commit();
+        mResultFragment = (ResultFragment) getSupportFragmentManager().findFragmentByTag("fragResult");
+        mFragmentManager = getSupportFragmentManager();
+        FragmentTransaction ft = mFragmentManager.beginTransaction();
+        if (mResultFragment != null) {
+            ft.remove(mResultFragment).commit();
+        }
     }
 
     private void removeNumberFragment() {
-        mNumbersFragment = (NumbersFragment) getFragmentManager().findFragmentByTag("fragNumbers");
-        FragmentTransaction ft = getFragmentManager().beginTransaction();
-        ft.remove(mNumbersFragment).commit();
+        mNumbersFragment = (NumbersFragment) getSupportFragmentManager().findFragmentByTag("fragNumbers");
+        mFragmentManager = getSupportFragmentManager();
+        FragmentTransaction ft = mFragmentManager.beginTransaction();
+        if (mNumbersFragment != null) {
+            ft.remove(mNumbersFragment).commit();
+        }
     }
 
     //generates question variables
@@ -167,9 +199,10 @@ public class MainActivity extends AppCompatActivity implements MyListener {
     private void addNumberFragment() {
         mNumbersFragment = new NumbersFragment();
         numberFragmentExtras();
-        FragmentTransaction transaction = getFragmentManager().beginTransaction();
-        transaction.add(R.id.numberContainer, mNumbersFragment, "fragNumbers");
-        transaction.commit();
+        mFragmentManager = getSupportFragmentManager();
+        FragmentTransaction ft = mFragmentManager.beginTransaction();
+        ft.add(R.id.numberContainer, mNumbersFragment, "fragNumbers");
+        ft.commit();
     }
 
 
@@ -182,9 +215,10 @@ public class MainActivity extends AppCompatActivity implements MyListener {
     private void addAnswerFragment() {
         mAnswersFragment = new AnswersFragment();
         answerFragmentExtras();
-        FragmentTransaction transaction = getFragmentManager().beginTransaction();
-        transaction.add(R.id.answerContainer, mAnswersFragment, "fragAnswer");
-        transaction.commit();
+        mFragmentManager = getSupportFragmentManager();
+        FragmentTransaction ft = mFragmentManager.beginTransaction();
+        ft.add(R.id.answerContainer, mAnswersFragment, "fragAnswer");
+        ft.commit();
 
     }
 
@@ -198,16 +232,18 @@ public class MainActivity extends AppCompatActivity implements MyListener {
     //Adds the resultFragment
     private void addResultFragment() {
         mResultFragment = new ResultFragment();
-        FragmentTransaction transaction = getFragmentManager().beginTransaction();
-        transaction.add(R.id.resultContainer, mResultFragment, "fragResult").commit();
+        mFragmentManager = getSupportFragmentManager();
+        FragmentTransaction ft = mFragmentManager.beginTransaction();
+        ft.add(R.id.resultContainer, mResultFragment, "fragResult").commit();
     }
 
     @Override
     public void checkAnswer(boolean isCorrectAnswer) {
 
-        mResultFragment = (ResultFragment) getFragmentManager().findFragmentByTag("fragResult");
+        mResultFragment = (ResultFragment) getSupportFragmentManager().findFragmentByTag("fragResult");
         if (mResultFragment != null) {
-            FragmentTransaction ft = getFragmentManager().beginTransaction();
+            mFragmentManager = getSupportFragmentManager();
+            FragmentTransaction ft = mFragmentManager.beginTransaction();
             ft.remove(mResultFragment).commit();
         }
         addResultFragment();
@@ -219,14 +255,15 @@ public class MainActivity extends AppCompatActivity implements MyListener {
             mResultFragment.setResult(isCorrectAnswer);
         }
         numberOfQuestions++;
-        scoreTextView.setText(Integer.toString(score) + "/" + Integer.toString(numberOfQuestions));
+        scoreTextView.setText(String.format("%s/%s", Integer.toString(score), Integer.toString(numberOfQuestions)));
         refreshQuestion();
 
     }
 
     private void replaceAnswerFragWithPlayAgainFrag() {
         mPlayAgainFragment = new PlayAgainFragment();
-        FragmentTransaction ft = getFragmentManager().beginTransaction();
+        mFragmentManager = getSupportFragmentManager();
+        FragmentTransaction ft = mFragmentManager.beginTransaction();
         mPlayAgainFragment.sendScore(score, numberOfQuestions);
         ft.replace(R.id.answerContainer, mPlayAgainFragment, "fragPlayAgain");
         ft.commit();
@@ -247,7 +284,8 @@ public class MainActivity extends AppCompatActivity implements MyListener {
     private void replacePlayAgainFrag() {
         mAnswersFragment = new AnswersFragment();
         answerFragmentExtras();
-        FragmentTransaction ft = getFragmentManager().beginTransaction();
+        mFragmentManager = getSupportFragmentManager();
+        FragmentTransaction ft = mFragmentManager.beginTransaction();
         ft.replace(R.id.answerContainer, mAnswersFragment, "fragAnswer").commit();
     }
 
@@ -263,7 +301,8 @@ public class MainActivity extends AppCompatActivity implements MyListener {
     private void refreshAnswerFragment() {
         mAnswersFragment = new AnswersFragment();
         answerFragmentExtras();
-        FragmentTransaction ft = getFragmentManager().beginTransaction();
+        mFragmentManager = getSupportFragmentManager();
+        FragmentTransaction ft = mFragmentManager.beginTransaction();
         ft.replace(R.id.answerContainer, mAnswersFragment, "fragAnswer").commit();
 //        addAnswerFragment();
         Log.e(LOG_TAG, "Refreshing Answer Fragment");
@@ -273,10 +312,59 @@ public class MainActivity extends AppCompatActivity implements MyListener {
     private void refreshNumberFragment() {
         mNumbersFragment = new NumbersFragment();
         numberFragmentExtras();
-        FragmentTransaction ft = getFragmentManager().beginTransaction();
+        mFragmentManager = getSupportFragmentManager();
+        FragmentTransaction ft = mFragmentManager.beginTransaction();
         ft.replace(R.id.numberContainer, mNumbersFragment, "fragNumbers").commit();
 //        addNumberFragment();
         Log.e(LOG_TAG, "Refreshing Number Fragment");
     }
 
+
+    //Show high score on click
+    public void showHighScore(View view) {
+        Log.i(LOG_TAG, "Adding High Score Fragment");
+        highScoreFragmentOperations();
+        removeNumberFragment();
+        removeResultFragment();
+
+    }
+
+    private void highScoreFragmentOperations() {
+        mAnswersFragment = (AnswersFragment) getSupportFragmentManager().findFragmentByTag("fragAnswers");
+        mPlayAgainFragment =(PlayAgainFragment) getSupportFragmentManager().findFragmentByTag("fragPlayAgain");
+        if (mAnswersFragment != null) {
+            mFragmentManager = getSupportFragmentManager();
+            FragmentTransaction ft = mFragmentManager.beginTransaction();
+            ft.replace(R.id.answerContainer, mHighScoreFragment, "fragHighScore").commit();
+
+        }else if(mPlayAgainFragment!= null){
+            mFragmentManager = getSupportFragmentManager();
+            FragmentTransaction ft = mFragmentManager.beginTransaction();
+            ft.replace(R.id.answerContainer, mHighScoreFragment, "fragHighScore").commit();
+        }else {
+            addHighScoreFragment();
+        }
+    }
+//TODO:MAKE HIGH SCORE FRAGMENT WORK
+    private void addHighScoreFragment() {
+        if(highScoreButton.getVisibility() == View.VISIBLE){
+            highScoreButton.setVisibility(View.INVISIBLE);
+        }
+        if(startGameButton.getVisibility() == View.VISIBLE){
+            playerNameEditText.setVisibility(View.INVISIBLE);
+            startGameButton.setVisibility(View.INVISIBLE);
+        }
+
+        mHighScoreFragment = new HighScoreFragment();
+        highScoreFragmentExtras();
+        mFragmentManager = getSupportFragmentManager();
+        FragmentTransaction ft = mFragmentManager.beginTransaction();
+        ft.add(R.id.answerContainer, mHighScoreFragment, "fragHighScore").commit();
+    }
+
+    private void highScoreFragmentExtras() {
+        Log.i(LOG_TAG, "High score extras");
+        mHighScoreFragment.sendScore(score, numberOfQuestions);
+        mHighScoreFragment.sendPlayerName(playerName);
+    }
 }

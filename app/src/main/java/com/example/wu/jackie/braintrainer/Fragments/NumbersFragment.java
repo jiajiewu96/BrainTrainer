@@ -1,7 +1,6 @@
-package com.example.wu.jackie.braintrainer;
+package com.example.wu.jackie.braintrainer.Fragments;
 
-import android.app.Fragment;
-import android.content.Context;
+import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.Log;
@@ -10,6 +9,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.example.wu.jackie.braintrainer.R;
+
 public class NumbersFragment extends Fragment {
 
     private static final String TAG = NumbersFragment.class.getSimpleName();
@@ -17,8 +18,6 @@ public class NumbersFragment extends Fragment {
     TextView problemNums;
 
     private int num1 = 0,num2 = 0;
-
-
 
     private String LOG_TAG = NumbersFragment.class.getSimpleName();
 
@@ -36,23 +35,8 @@ public class NumbersFragment extends Fragment {
         return view;
     }
 
-
-
-    @Override
-    public void onDetach() {
-        Log.e(LOG_TAG, "Detach");
-        super.onDetach();
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        Log.e(LOG_TAG, "Attach");
-
-        super.onAttach(context);
-    }
-
     public void setTVText() {
-        problemNums.setText(Integer.toString(num1) + " + " + Integer.toString(num2));
+        problemNums.setText(String.format("%s + %s", String.valueOf(num1), String.valueOf(num2)));
     }
 
     //Sets numbers in NumbersFragment to the values created in MainActivity

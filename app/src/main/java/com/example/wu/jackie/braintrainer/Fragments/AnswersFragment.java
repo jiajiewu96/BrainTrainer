@@ -1,15 +1,17 @@
-package com.example.wu.jackie.braintrainer;
+package com.example.wu.jackie.braintrainer.Fragments;
 
-import android.app.Fragment;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
+
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+
+import com.example.wu.jackie.braintrainer.MyListener;
+import com.example.wu.jackie.braintrainer.R;
 
 import java.util.ArrayList;
 
@@ -31,7 +33,6 @@ public class AnswersFragment extends Fragment implements View.OnClickListener{
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-        Log.i(LOG_TAG, "onCreateView");
 
         View view = inflater.inflate(R.layout.answers_fragment,container,false);
 
