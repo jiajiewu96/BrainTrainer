@@ -8,7 +8,7 @@ import java.util.List;
 
 public class HighScoreRepository {
     private HighScoreDAO mHighScoreDAO;
-    private LiveData<List<HighScore>> mAllHighScores;
+    private LiveData<List<HighScoreEntity>> mAllHighScores;
 
     HighScoreRepository(Application application){
         HighScoreDB db = HighScoreDB.getDatabase(application);
@@ -16,15 +16,15 @@ public class HighScoreRepository {
         mAllHighScores = mHighScoreDAO.loadAllHighScores();
     }
 
-    LiveData<List<HighScore>> loadAllHighScores(){
+    LiveData<List<HighScoreEntity>> loadAllHighScores(){
         return mAllHighScores;
     }
 
-    public void insert(HighScore highScore){
+    public void insert(HighScoreEntity highScore){
         new insertAsyncTask(mHighScoreDAO).execute(highScore);
     }
 
-    private static class insertAsyncTask extends AsyncTask<HighScore, Void, Void>{
+    private static class insertAsyncTask extends AsyncTask<HighScoreEntity, Void, Void>{
 
         private HighScoreDAO mAsyncTaskDao;
 
@@ -33,7 +33,7 @@ public class HighScoreRepository {
         }
 
         @Override
-        protected Void doInBackground(HighScore... highScores) {
+        protected Void doInBackground(HighScoreEntity... highScores) {
             mAsyncTaskDao.insert(highScores[0]);
             return null;
         }

@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.wu.jackie.braintrainer.R;
-import com.example.wu.jackie.braintrainer.db.HighScore;
+import com.example.wu.jackie.braintrainer.db.HighScoreEntity;
 
 import java.util.List;
 
@@ -31,7 +31,7 @@ public class HighScoreListAdapter extends RecyclerView.Adapter<HighScoreListAdap
     }
 
     private final LayoutInflater mInflater;
-    private List<HighScore> mHighScores;
+    private List<HighScoreEntity> mHighScores;
 
     public HighScoreListAdapter(Context context){mInflater = LayoutInflater.from(context);}
 
@@ -46,7 +46,7 @@ public class HighScoreListAdapter extends RecyclerView.Adapter<HighScoreListAdap
     @Override
     public void onBindViewHolder(@NonNull HighScoreViewHolder holder, int position) {
         if(mHighScores != null){
-            HighScore current = mHighScores.get(position);
+            HighScoreEntity current = mHighScores.get(position);
             holder.playerNameItemView.setText(current.getPlayerName());
             holder.scoreItemView.setText(current.getPlayerScore());
             holder.percentItemView.setText(current.getPercentQuestionsCorrect());
@@ -59,7 +59,7 @@ public class HighScoreListAdapter extends RecyclerView.Adapter<HighScoreListAdap
         }
     }
 
-    public void setHighScores(List<HighScore> highScores){
+    public void setHighScores(List<HighScoreEntity> highScores){
         mHighScores = highScores;
         notifyDataSetChanged();
     }

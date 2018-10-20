@@ -13,14 +13,14 @@ import android.view.ViewGroup;
 
 import com.example.wu.jackie.braintrainer.Adapter.HighScoreListAdapter;
 import com.example.wu.jackie.braintrainer.R;
-import com.example.wu.jackie.braintrainer.db.HighScore;
+import com.example.wu.jackie.braintrainer.db.HighScoreEntity;
 import com.example.wu.jackie.braintrainer.db.HighScoreViewModel;
 
 import java.util.List;
 
 public class HighScoreFragment extends Fragment {
 
-    private HighScore mHighScore;
+    private HighScoreEntity mHighScore;
 
     private HighScoreViewModel mHighScoreViewModel;
 
@@ -38,9 +38,9 @@ public class HighScoreFragment extends Fragment {
 
         mHighScoreViewModel = ViewModelProviders.of(this).get(HighScoreViewModel.class);
 
-        mHighScoreViewModel.getAllHighScores().observe(HighScoreFragment.this, new Observer<List<HighScore>>() {
+        mHighScoreViewModel.getAllHighScores().observe(HighScoreFragment.this, new Observer<List<HighScoreEntity>>() {
             @Override
-            public void onChanged(@Nullable List<HighScore> highScores) {
+            public void onChanged(@Nullable List<HighScoreEntity> highScores) {
                 adapter.setHighScores(highScores);
             }
         });
@@ -51,7 +51,7 @@ public class HighScoreFragment extends Fragment {
     }
 
 
-    public void sendHighScore(HighScore highScore) {
+    public void sendHighScore(HighScoreEntity highScore) {
         this.mHighScore = highScore;
     }
 }

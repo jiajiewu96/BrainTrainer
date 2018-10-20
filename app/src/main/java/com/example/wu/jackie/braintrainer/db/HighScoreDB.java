@@ -9,7 +9,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 
-@Database(entities = {HighScore.class}, version = 1)
+@Database(entities = {HighScoreEntity.class}, version = 1)
 public abstract class HighScoreDB extends RoomDatabase {
 
     public abstract HighScoreDAO mHighScoreDAO();

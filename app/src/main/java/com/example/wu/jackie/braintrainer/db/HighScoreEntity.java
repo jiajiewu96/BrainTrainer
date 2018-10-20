@@ -5,8 +5,10 @@ import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
 
+import com.example.wu.jackie.braintrainer.model.HighScoreModel;
+
 @Entity(tableName = "high_score")
-public class HighScore {
+public class HighScoreEntity implements HighScoreModel {
     @NonNull
     @PrimaryKey
     private String playerName;
@@ -17,7 +19,7 @@ public class HighScore {
     @ColumnInfo(name = "percent_questions_correct")
     private int percentQuestionsCorrect;
 
-    public HighScore(@NonNull String playerName, int playerScore, int percentQuestionsCorrect){
+    public HighScoreEntity(@NonNull String playerName, int playerScore, int percentQuestionsCorrect){
         this.playerName = playerName;
         this.playerScore = playerScore;
         this.percentQuestionsCorrect = percentQuestionsCorrect;
@@ -36,14 +38,17 @@ public class HighScore {
     }
 
     @NonNull
+    @Override
     public String getPlayerName(){
         return this.playerName;
     }
 
+    @Override
     public int getPlayerScore(){
         return this.playerScore;
     }
 
+    @Override
     public int getPercentQuestionsCorrect(){
         return this.percentQuestionsCorrect;
     }

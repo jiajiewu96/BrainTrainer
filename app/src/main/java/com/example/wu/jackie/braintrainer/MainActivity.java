@@ -1,9 +1,6 @@
 package com.example.wu.jackie.braintrainer;
 
 
-import android.arch.lifecycle.Observer;
-import android.arch.lifecycle.ViewModelProviders;
-import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentTransaction;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -25,12 +22,10 @@ import com.example.wu.jackie.braintrainer.Fragments.HighScoreFragment;
 import com.example.wu.jackie.braintrainer.Fragments.NumbersFragment;
 import com.example.wu.jackie.braintrainer.Fragments.PlayAgainFragment;
 import com.example.wu.jackie.braintrainer.Fragments.ResultFragment;
-import com.example.wu.jackie.braintrainer.db.HighScore;
-import com.example.wu.jackie.braintrainer.db.HighScoreDB;
+import com.example.wu.jackie.braintrainer.db.HighScoreEntity;
 import com.example.wu.jackie.braintrainer.db.HighScoreViewModel;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements MyListener {
 
@@ -52,7 +47,7 @@ public class MainActivity extends AppCompatActivity implements MyListener {
     TextView timerTextView;
     TextView scoreTextView;
     EditText playerNameEditText;
-    HighScore mHighScore;
+    HighScoreEntity mHighScore;
 
     HighScoreListAdapter mListAdapter;
 
@@ -168,7 +163,7 @@ public class MainActivity extends AppCompatActivity implements MyListener {
             public void onFinish() {
                 timerTextView.setText(R.string.finished_time_text);
                 int percent = (int)((score * 100f)/numberOfQuestions);
-                mHighScore = new HighScore(playerName, score,percent);
+                mHighScore = new HighScoreEntity(playerName, score,percent);
                 gameActive = false;
                 setGameOverScreen();
             }

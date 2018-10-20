@@ -8,7 +8,7 @@ import java.util.List;
 
 public class HighScoreViewModel extends AndroidViewModel {
     private HighScoreRepository mRepository;
-    private LiveData<List<HighScore>> mAllHighScores;
+    private LiveData<List<HighScoreEntity>> mAllHighScores;
 
     public HighScoreViewModel(Application application){
         super(application);
@@ -16,11 +16,11 @@ public class HighScoreViewModel extends AndroidViewModel {
         mAllHighScores = mRepository.loadAllHighScores();
     }
 
-    public LiveData<List<HighScore>> getAllHighScores(){
+    public LiveData<List<HighScoreEntity>> getAllHighScores(){
         return mAllHighScores;
     }
 
-    public void insert(HighScore highScore){
+    public void insert(HighScoreEntity highScore){
         mRepository.insert(highScore);
     }
 }
