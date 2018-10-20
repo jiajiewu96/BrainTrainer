@@ -1,6 +1,9 @@
 package com.example.wu.jackie.braintrainer;
 
 
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
+import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentTransaction;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -16,13 +19,18 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.example.wu.jackie.braintrainer.Adapter.HighScoreListAdapter;
 import com.example.wu.jackie.braintrainer.Fragments.AnswersFragment;
 import com.example.wu.jackie.braintrainer.Fragments.HighScoreFragment;
 import com.example.wu.jackie.braintrainer.Fragments.NumbersFragment;
 import com.example.wu.jackie.braintrainer.Fragments.PlayAgainFragment;
 import com.example.wu.jackie.braintrainer.Fragments.ResultFragment;
+import com.example.wu.jackie.braintrainer.db.HighScore;
+import com.example.wu.jackie.braintrainer.db.HighScoreDB;
+import com.example.wu.jackie.braintrainer.db.HighScoreViewModel;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements MyListener {
 
@@ -44,8 +52,13 @@ public class MainActivity extends AppCompatActivity implements MyListener {
     TextView timerTextView;
     TextView scoreTextView;
     EditText playerNameEditText;
+    HighScore mHighScore;
+
+    HighScoreListAdapter mListAdapter;
 
     FragmentManager mFragmentManager;
+
+    HighScoreViewModel mHighScoreViewModel;
 
     boolean gameActive;
 
@@ -79,6 +92,9 @@ public class MainActivity extends AppCompatActivity implements MyListener {
         highScoreButton = (Button) findViewById(R.id.highScoreButton);
 
         startGameButton = (Button) findViewById(R.id.start_game_button);
+
+
+
     }
 
     @Override
@@ -151,6 +167,8 @@ public class MainActivity extends AppCompatActivity implements MyListener {
             @Override
             public void onFinish() {
                 timerTextView.setText(R.string.finished_time_text);
+                int percent = (int)((score * 100f)/numberOfQuestions);
+                mHighScore = new HighScore(playerName, score,percent);
                 gameActive = false;
                 setGameOverScreen();
             }
@@ -335,12 +353,14 @@ public class MainActivity extends AppCompatActivity implements MyListener {
         if (mAnswersFragment != null) {
             mFragmentManager = getSupportFragmentManager();
             FragmentTransaction ft = mFragmentManager.beginTransaction();
-            ft.replace(R.id.answerContainer, mHighScoreFragment, "fragHighScore").commit();
+            ft.remove(mAnswersFragment)
+                    .add(R.id.answerContainer, mHighScoreFragment, "fragHighScore").commit();
 
         }else if(mPlayAgainFragment!= null){
             mFragmentManager = getSupportFragmentManager();
             FragmentTransaction ft = mFragmentManager.beginTransaction();
-            ft.replace(R.id.answerContainer, mHighScoreFragment, "fragHighScore").commit();
+            ft.remove(mPlayAgainFragment)
+                    .add(R.id.highScoreContainer, mHighScoreFragment, "fragHighScore").commit();
         }else {
             addHighScoreFragment();
         }
@@ -359,12 +379,13 @@ public class MainActivity extends AppCompatActivity implements MyListener {
         highScoreFragmentExtras();
         mFragmentManager = getSupportFragmentManager();
         FragmentTransaction ft = mFragmentManager.beginTransaction();
-        ft.add(R.id.answerContainer, mHighScoreFragment, "fragHighScore").commit();
+        ft.add(R.id.highScoreContainer, mHighScoreFragment, "fragHighScore").commit();
     }
 
     private void highScoreFragmentExtras() {
         Log.i(LOG_TAG, "High score extras");
-        mHighScoreFragment.sendScore(score, numberOfQuestions);
-        mHighScoreFragment.sendPlayerName(playerName);
+        if(mHighScore!=null) {
+            mHighScoreFragment.sendHighScore(mHighScore);
+        }
     }
 }

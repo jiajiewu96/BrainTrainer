@@ -20,10 +20,11 @@ import java.util.List;
 
 public class HighScoreFragment extends Fragment {
 
-    private int score, numberOfQuestions, percentQuestionsCorrect;
-    private String playerName;
+    private HighScore mHighScore;
 
     private HighScoreViewModel mHighScoreViewModel;
+
+
 
     @Nullable
     @Override
@@ -44,15 +45,13 @@ public class HighScoreFragment extends Fragment {
             }
         });
 
+        mHighScoreViewModel.insert(mHighScore);
+
         return view;
     }
 
-    public void sendScore(int score, int numberOfQuestions) {
-        this.score = score;
-        this.numberOfQuestions = numberOfQuestions;
-    }
 
-    public void sendPlayerName(String playerName) {
-        this.playerName = playerName;
+    public void sendHighScore(HighScore highScore) {
+        this.mHighScore = highScore;
     }
 }

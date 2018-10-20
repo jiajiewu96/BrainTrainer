@@ -17,12 +17,25 @@ public class HighScore {
     @ColumnInfo(name = "percent_questions_correct")
     private int percentQuestionsCorrect;
 
-    public HighScore(String playerName, int playerScore, int percentQuestionsCorrect){
+    public HighScore(@NonNull String playerName, int playerScore, int percentQuestionsCorrect){
         this.playerName = playerName;
         this.playerScore = playerScore;
         this.percentQuestionsCorrect = percentQuestionsCorrect;
     }
 
+    public void setPlayerName(@NonNull String playerName){
+        this.playerName = playerName;
+    }
+
+    public void setPlayerScore(int playerScore){
+        this.playerScore = playerScore;
+    }
+
+    public void setPercentQuestionsCorrect(int percentQuestionsCorrect){
+        this.percentQuestionsCorrect = percentQuestionsCorrect;
+    }
+
+    @NonNull
     public String getPlayerName(){
         return this.playerName;
     }
