@@ -20,6 +20,8 @@ public class HighScoreRepository {
         return mAllHighScores;
     }
 
+    public void deleteAll(){mHighScoreDAO.deleteAll();}
+
     public void insert(HighScoreEntity highScore){
         new insertAsyncTask(mHighScoreDAO).execute(highScore);
     }

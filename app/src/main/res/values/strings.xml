@@ -17,4 +17,7 @@
     <string name="high_score_button_text">High Score</string>
     <string name="player_name_edit_text_hint">Please enter your name!</string>
     <string name="starts_game_content_description">starts_game</string>
+    <string name="percent_label">Percent</string>
+    <string name="score_label">Score</string>
+    <string name="player_name_label">Name</string>
 </resources>

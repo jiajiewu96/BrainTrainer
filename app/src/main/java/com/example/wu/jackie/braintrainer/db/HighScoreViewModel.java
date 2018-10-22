@@ -23,4 +23,6 @@ public class HighScoreViewModel extends AndroidViewModel {
     public void insert(HighScoreEntity highScore){
         mRepository.insert(highScore);
     }
+
+    public void deleteAll(){mRepository.deleteAll();}
 }

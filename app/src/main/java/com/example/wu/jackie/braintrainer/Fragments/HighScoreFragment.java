@@ -21,6 +21,9 @@ import java.util.List;
 public class HighScoreFragment extends Fragment {
 
     private HighScoreEntity mHighScore;
+    private String playerName;
+    private int playerScore;
+    private int percent;
 
     private HighScoreViewModel mHighScoreViewModel;
 
@@ -31,12 +34,16 @@ public class HighScoreFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.high_score_fragment, container, false);
 
+        mHighScore = new HighScoreEntity(playerName, playerScore, percent);
+
         RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.highScoreRecyclerView);
         final HighScoreListAdapter adapter = new HighScoreListAdapter(getActivity());
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         mHighScoreViewModel = ViewModelProviders.of(this).get(HighScoreViewModel.class);
+
+        mHighScoreViewModel.insert(mHighScore);
 
         mHighScoreViewModel.getAllHighScores().observe(HighScoreFragment.this, new Observer<List<HighScoreEntity>>() {
             @Override
@@ -45,13 +52,12 @@ public class HighScoreFragment extends Fragment {
             }
         });
 
-        mHighScoreViewModel.insert(mHighScore);
-
         return view;
     }
 
-
     public void sendHighScore(HighScoreEntity highScore) {
-        this.mHighScore = highScore;
+        this.playerName = highScore.getPlayerName();
+        this.playerScore = highScore.getPlayerScore();
+        this.percent = highScore.getPercentQuestionsCorrect();
     }
 }

@@ -1,73 +1,67 @@
 package com.example.wu.jackie.braintrainer.Adapter;
 
 import android.content.Context;
+import android.databinding.DataBindingUtil;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.text.Layout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.wu.jackie.braintrainer.R;
+import com.example.wu.jackie.braintrainer.databinding.HighScoreRecycleviewItemBinding;
 import com.example.wu.jackie.braintrainer.db.HighScoreEntity;
+import com.example.wu.jackie.braintrainer.model.HighScoreModel;
 
 import java.util.List;
 
 public class HighScoreListAdapter extends RecyclerView.Adapter<HighScoreListAdapter.HighScoreViewHolder> {
 
 
-    class HighScoreViewHolder extends RecyclerView.ViewHolder{
-        private final TextView playerNameItemView;
-        private final TextView scoreItemView;
-        private final TextView percentItemView;
 
-        private HighScoreViewHolder(View itemView){
-            super(itemView);
-            playerNameItemView = itemView.findViewById(R.id.playerNameItemView);
-            scoreItemView = itemView.findViewById(R.id.playerScoreItemView);
-            percentItemView = itemView.findViewById(R.id.playerPercentCorrectItemView);
+    class HighScoreViewHolder extends RecyclerView.ViewHolder{
+
+        final HighScoreRecycleviewItemBinding binding;
+
+        private HighScoreViewHolder(HighScoreRecycleviewItemBinding binding){
+            super(binding.getRoot());
+            this.binding = binding;
 
         }
     }
 
     private final LayoutInflater mInflater;
-    private List<HighScoreEntity> mHighScores;
+    List<? extends HighScoreModel> mHighScore;
 
     public HighScoreListAdapter(Context context){mInflater = LayoutInflater.from(context);}
 
+    public void setHighScores(List<HighScoreEntity> highScores){
+
+        mHighScore = highScores;
+
+        notifyDataSetChanged();
+    }
 
     @NonNull
     @Override
     public HighScoreViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View itemView = mInflater.inflate(R.layout.high_score_recycleview_item, parent, false);
-        return new HighScoreViewHolder(itemView);
+        HighScoreRecycleviewItemBinding binding = HighScoreRecycleviewItemBinding.inflate(mInflater, parent, false);
+        return new HighScoreViewHolder(binding);
     }
 
     @Override
     public void onBindViewHolder(@NonNull HighScoreViewHolder holder, int position) {
-        if(mHighScores != null){
-            HighScoreEntity current = mHighScores.get(position);
-            holder.playerNameItemView.setText(current.getPlayerName());
-            holder.scoreItemView.setText(current.getPlayerScore());
-            holder.percentItemView.setText(current.getPercentQuestionsCorrect());
-
-        }else{
-            String noHighScore = "No high score yet!";
-            holder.playerNameItemView.setText(noHighScore);
-            holder.scoreItemView.setText("0");
-            holder.percentItemView.setText("0");
-        }
+        holder.binding.setHighScore(mHighScore.get(position));
+        holder.binding.executePendingBindings();
     }
 
-    public void setHighScores(List<HighScoreEntity> highScores){
-        mHighScores = highScores;
-        notifyDataSetChanged();
-    }
 
     @Override
     public int getItemCount() {
-        if(mHighScores != null)
-            return mHighScores.size();
+        if(mHighScore != null)
+            return mHighScore.size();
         else return 0;
     }
 

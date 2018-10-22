@@ -82,6 +82,7 @@ public class MainActivity extends AppCompatActivity implements MyListener {
         timerTextView.setVisibility(View.INVISIBLE);
         scoreTextView = (TextView) findViewById(R.id.scoreTextView);
         scoreTextView.setText("0/0");
+        scoreTextView.setVisibility(View.INVISIBLE);
         playerNameEditText = (EditText) findViewById(R.id.playerNameEditText);
 
         highScoreButton = (Button) findViewById(R.id.highScoreButton);
@@ -163,7 +164,7 @@ public class MainActivity extends AppCompatActivity implements MyListener {
             public void onFinish() {
                 timerTextView.setText(R.string.finished_time_text);
                 int percent = (int)((score * 100f)/numberOfQuestions);
-                mHighScore = new HighScoreEntity(playerName, score,percent);
+                mHighScore = new HighScoreEntity(playerName, score, percent);
                 gameActive = false;
                 setGameOverScreen();
             }
@@ -292,6 +293,7 @@ public class MainActivity extends AppCompatActivity implements MyListener {
         addNumberFragment();
         startTimer();
         resetScore();
+        highScoreButton.setVisibility(View.INVISIBLE);
     }
 
     private void replacePlayAgainFrag() {
@@ -339,28 +341,25 @@ public class MainActivity extends AppCompatActivity implements MyListener {
         highScoreFragmentOperations();
         removeNumberFragment();
         removeResultFragment();
-
     }
 
     private void highScoreFragmentOperations() {
+        mHighScoreFragment = new HighScoreFragment();
         mAnswersFragment = (AnswersFragment) getSupportFragmentManager().findFragmentByTag("fragAnswers");
         mPlayAgainFragment =(PlayAgainFragment) getSupportFragmentManager().findFragmentByTag("fragPlayAgain");
         if (mAnswersFragment != null) {
             mFragmentManager = getSupportFragmentManager();
             FragmentTransaction ft = mFragmentManager.beginTransaction();
-            ft.remove(mAnswersFragment)
-                    .add(R.id.answerContainer, mHighScoreFragment, "fragHighScore").commit();
+            ft.remove(mAnswersFragment).commit();
 
         }else if(mPlayAgainFragment!= null){
             mFragmentManager = getSupportFragmentManager();
             FragmentTransaction ft = mFragmentManager.beginTransaction();
-            ft.remove(mPlayAgainFragment)
-                    .add(R.id.highScoreContainer, mHighScoreFragment, "fragHighScore").commit();
-        }else {
-            addHighScoreFragment();
+            ft.remove(mPlayAgainFragment).commit();
         }
+        addHighScoreFragment();
+
     }
-//TODO:MAKE HIGH SCORE FRAGMENT WORK
     private void addHighScoreFragment() {
         if(highScoreButton.getVisibility() == View.VISIBLE){
             highScoreButton.setVisibility(View.INVISIBLE);
@@ -374,7 +373,8 @@ public class MainActivity extends AppCompatActivity implements MyListener {
         highScoreFragmentExtras();
         mFragmentManager = getSupportFragmentManager();
         FragmentTransaction ft = mFragmentManager.beginTransaction();
-        ft.add(R.id.highScoreContainer, mHighScoreFragment, "fragHighScore").commit();
+        ft.add(R.id.highScoreContainer, mHighScoreFragment, "fragHighScore")
+                .addToBackStack("mainActivityBackStack").commit();
     }
 
     private void highScoreFragmentExtras() {

@@ -48,7 +48,9 @@ public abstract class HighScoreDB extends RoomDatabase {
         @Override
         protected Void doInBackground(Void... voids) {
             mDAO.deleteAll();
-
+            String noScores = "No Scores Yet!";
+            int noScoresInt = 0;
+            HighScoreEntity highScore = new HighScoreEntity(noScores, noScoresInt, noScoresInt);
             return null;
         }
     }
