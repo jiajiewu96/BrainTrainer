@@ -1,6 +1,8 @@
 package com.example.wu.jackie.braintrainer;
 
 
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v4.app.FragmentTransaction;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -16,14 +18,13 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.example.wu.jackie.braintrainer.Adapter.HighScoreListAdapter;
 import com.example.wu.jackie.braintrainer.Fragments.AnswersFragment;
 import com.example.wu.jackie.braintrainer.Fragments.HighScoreFragment;
 import com.example.wu.jackie.braintrainer.Fragments.NumbersFragment;
 import com.example.wu.jackie.braintrainer.Fragments.PlayAgainFragment;
 import com.example.wu.jackie.braintrainer.Fragments.ResultFragment;
+import com.example.wu.jackie.braintrainer.Fragments.SettingsFragment;
 import com.example.wu.jackie.braintrainer.db.HighScoreEntity;
-import com.example.wu.jackie.braintrainer.db.HighScoreViewModel;
 
 import java.util.ArrayList;
 
@@ -36,6 +37,7 @@ public class MainActivity extends AppCompatActivity implements MyListener {
     private AnswersFragment mAnswersFragment;
     private PlayAgainFragment mPlayAgainFragment;
     private HighScoreFragment mHighScoreFragment;
+    private SettingsFragment mSettingsFragment;
 
     private int num1, num2;
     private String playerName;
@@ -49,11 +51,7 @@ public class MainActivity extends AppCompatActivity implements MyListener {
     EditText playerNameEditText;
     HighScoreEntity mHighScore;
 
-    HighScoreListAdapter mListAdapter;
-
     FragmentManager mFragmentManager;
-
-    HighScoreViewModel mHighScoreViewModel;
 
     boolean gameActive;
 
@@ -67,8 +65,16 @@ public class MainActivity extends AppCompatActivity implements MyListener {
     private int countDownTimeInMillis, countDownIntervalInMillis;
 
 
+
+    public static final String
+            KEY_PREF_DARKTHEME_SWITCH = "dark_theme_switch";
+    private String mCurrentTheme;
+    private boolean switchPref;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -87,11 +93,11 @@ public class MainActivity extends AppCompatActivity implements MyListener {
 
         highScoreButton = (Button) findViewById(R.id.highScoreButton);
 
-        startGameButton = (Button) findViewById(R.id.start_game_button);
-
+        startGameButton = (Button) findViewById(R.id.startGameButton);
 
 
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -109,11 +115,35 @@ public class MainActivity extends AppCompatActivity implements MyListener {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            Intent intent = new Intent(this, SettingsActivity.class);
+            startActivity(intent);
             return true;
         }
 
         return super.onOptionsItemSelected(item);
     }
+
+    @Override
+    public void onBackPressed() {
+        if(mPlayAgainFragment!=null){
+            addPlayAgainFragment();
+        }
+        else if(startGameButton.getVisibility() == View.INVISIBLE){
+            playerNameEditText.setVisibility(View.VISIBLE);
+            startGameButton.setVisibility(View.VISIBLE);
+        }else{
+            super.onBackPressed();
+        }
+        highScoreButton.setVisibility(View.VISIBLE);
+        removeHighScoreFragment();
+
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+    }
+
 
     //onClick method that generates Initial Question.
     public void generateInitialQuestion(View view) {
@@ -174,11 +204,21 @@ public class MainActivity extends AppCompatActivity implements MyListener {
 
     private void setGameOverScreen() {
         highScoreButton.setVisibility(View.VISIBLE);
-        replaceAnswerFragWithPlayAgainFrag();
         removeNumberFragment();
         removeResultFragment();
+        removeAnswerFragment();
+        addPlayAgainFragment();
         timerTextView.setVisibility(View.INVISIBLE);
         scoreTextView.setVisibility(View.INVISIBLE);
+    }
+
+    private void removeAnswerFragment() {
+        mAnswersFragment = (AnswersFragment) getSupportFragmentManager().findFragmentByTag("fragAnswer");
+        mFragmentManager = getSupportFragmentManager();
+        FragmentTransaction ft = mFragmentManager.beginTransaction();
+        if(mAnswersFragment !=null){
+            ft.remove(mAnswersFragment).commit();
+        }
     }
 
     private void removeResultFragment() {
@@ -274,12 +314,12 @@ public class MainActivity extends AppCompatActivity implements MyListener {
 
     }
 
-    private void replaceAnswerFragWithPlayAgainFrag() {
+    private void addPlayAgainFragment() {
         mPlayAgainFragment = new PlayAgainFragment();
         mFragmentManager = getSupportFragmentManager();
         FragmentTransaction ft = mFragmentManager.beginTransaction();
         mPlayAgainFragment.sendScore(score, numberOfQuestions);
-        ft.replace(R.id.answerContainer, mPlayAgainFragment, "fragPlayAgain");
+        ft.add(R.id.playAgainContainer, mPlayAgainFragment, "fragPlayAgain");
         ft.commit();
     }
 
@@ -288,21 +328,15 @@ public class MainActivity extends AppCompatActivity implements MyListener {
     @Override
     public void playAgain() {
         Log.e(LOG_TAG, "play again clicked");
-        replacePlayAgainFrag();
+        removePlayAgainFragment();
         generateQuestionVariables();
+
         addNumberFragment();
         startTimer();
         resetScore();
         highScoreButton.setVisibility(View.INVISIBLE);
     }
 
-    private void replacePlayAgainFrag() {
-        mAnswersFragment = new AnswersFragment();
-        answerFragmentExtras();
-        mFragmentManager = getSupportFragmentManager();
-        FragmentTransaction ft = mFragmentManager.beginTransaction();
-        ft.replace(R.id.answerContainer, mAnswersFragment, "fragAnswer").commit();
-    }
 
 
     private void refreshQuestion() {
@@ -353,13 +387,18 @@ public class MainActivity extends AppCompatActivity implements MyListener {
             ft.remove(mAnswersFragment).commit();
 
         }else if(mPlayAgainFragment!= null){
-            mFragmentManager = getSupportFragmentManager();
-            FragmentTransaction ft = mFragmentManager.beginTransaction();
-            ft.remove(mPlayAgainFragment).commit();
+            removePlayAgainFragment();
         }
         addHighScoreFragment();
 
     }
+
+    private void removePlayAgainFragment() {
+        mFragmentManager = getSupportFragmentManager();
+        FragmentTransaction ft = mFragmentManager.beginTransaction();
+        ft.remove(mPlayAgainFragment).commit();
+    }
+
     private void addHighScoreFragment() {
         if(highScoreButton.getVisibility() == View.VISIBLE){
             highScoreButton.setVisibility(View.INVISIBLE);
@@ -374,7 +413,13 @@ public class MainActivity extends AppCompatActivity implements MyListener {
         mFragmentManager = getSupportFragmentManager();
         FragmentTransaction ft = mFragmentManager.beginTransaction();
         ft.add(R.id.highScoreContainer, mHighScoreFragment, "fragHighScore")
-                .addToBackStack("mainActivityBackStack").commit();
+                .addToBackStack("fragHighScore").commit();
+    }
+
+    private void removeHighScoreFragment() {
+        mFragmentManager = getSupportFragmentManager();
+        FragmentTransaction ft = mFragmentManager.beginTransaction();
+        ft.remove(mHighScoreFragment).commit();
     }
 
     private void highScoreFragmentExtras() {

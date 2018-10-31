@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="AppTheme.Dark" parent="Theme.AppCompat.NoActionBar">
+        <item name="colorPrimary">@color/colorSecondary</item>
+        <item name="android:colorBackground">@color/colorBackgroundDark</item>
+        <item name="colorAccent">@color/colorSecondaryAccent</item>
+        <item name="colorPrimaryDark">@color/colorSecondaryDark</item>
+        <item name="android:textColorPrimary">@color/textColorDark</item>
+        <item name="android:textColorPrimaryInverse">@color/colorSecondary</item>
+        <item name="android:textColorSecondary">@color/textColorDarkSecondary</item>
+        <item name="android:buttonStyle">@style/ButtonColor</item>
+    </style>
+</resources>
