@@ -21,6 +21,5 @@
     <string name="score_label">Score</string>
     <string name="player_name_label">Name</string>
     <string name="dark_theme_switch_title">Dark Theme</string>
-    <string name="dark_theme_switch_summary_off">Dark theme off</string>
-    <string name="dark_theme_switch_summary_on">Dark theme on</string>
+    <string name="dark_theme_switch_summary_description">Switch to enable Dark Theme</string>
 </resources>

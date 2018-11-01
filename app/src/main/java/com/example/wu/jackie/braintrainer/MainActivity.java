@@ -3,6 +3,7 @@ package com.example.wu.jackie.braintrainer;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentTransaction;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -95,7 +96,7 @@ public class MainActivity extends AppCompatActivity implements MyListener {
 
         startGameButton = (Button) findViewById(R.id.startGameButton);
 
-
+        PreferenceManager.setDefaultValues(this, R.xml.prefrences, false);
     }
 
 

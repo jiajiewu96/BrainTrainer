@@ -31,7 +31,8 @@
             android:background="@drawable/my_boarder"
             android:padding="4dp"
             android:text="@{String.valueOf(highScore.playerScore)}"
-            android:textSize="24sp" android:theme="@style/AppTheme"/>
+            android:textSize="24sp"
+            android:theme="@style/AppTheme"/>
 
         <TextView
             android:id="@+id/playerPercentCorrectItemView"
@@ -41,6 +42,7 @@
             android:background="@drawable/my_boarder"
             android:padding="4dp"
             android:text="@{String.valueOf(highScore.percentQuestionsCorrect)}"
-            android:textSize="24sp" android:theme="@style/AppTheme"/>
+            android:textSize="24sp"
+            android:theme="@style/AppTheme"/>
     </LinearLayout>
 </layout>
